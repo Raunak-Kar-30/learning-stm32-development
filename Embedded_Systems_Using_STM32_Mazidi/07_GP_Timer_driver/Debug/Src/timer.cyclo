@@ -1,0 +1,2 @@
+../Src/timer.c:11:6:timer2_delay_ms	4
+../Src/timer.c:45:6:blink_led_using_tim2_ch1	3

@@ -1,0 +1,30 @@
+// Driver program for blinking an LED using a timer and interrupts instead of polling the Counter (CNT) register
+
+// Includes
+#include "timer_interrupt.h"
+
+// Function declarations
+
+// Functions
+// Initialize timer 2 and generate an interrupt toggling the LED everytime an interrupt is generated
+void blink_led_timer_interrupt()
+{
+	// Disable all IRQs
+
+	// Enable clock access to the timer
+	RCC->APB1ENR |= TIM2_CLK_EN;
+
+	// Set the APB1 prescalar to 16, thus getting a freq of 16MHz/16 = 1MHz
+	RCC->CFGR |= (1UL << 10 | 1UL << 11 | 1UL << 12);
+
+	// Set the Auto Reload Register for timer 2
+
+	// Enable interrupt for TIM2
+
+	// Enable TIM2 interrupt in NVIC
+
+	// Enable all IRQs
+}
+
+// ISR for the TIM2 interrupt
+// We redefine the

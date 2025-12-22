@@ -1,0 +1,11 @@
+#ifndef USART2_H_
+#define USART2_H_
+
+// Includes
+#include "stm32f4xx.h"
+
+// Defines
+
+// Function declarations
+
+#endif /* USART2_H_ */

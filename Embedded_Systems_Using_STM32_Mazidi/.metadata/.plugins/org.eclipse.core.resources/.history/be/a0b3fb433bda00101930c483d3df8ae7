@@ -1,0 +1,13 @@
+#ifndef USART_INTERRUPT_H_
+#define USART_INTERRUPT_H_
+
+// Includes
+#include "stm32f4xx.h"
+
+// Defines
+#define USART2_CLK_EN		(1UL << 17)
+#define USART2_RXNEIE		(1UL << 5)
+
+// Function declarations (public)
+
+#endif /* USART_INTERRUPT_H_ */

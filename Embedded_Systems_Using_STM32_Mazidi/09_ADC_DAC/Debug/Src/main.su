@@ -1,0 +1,2 @@
+../Src/main.c:17:5:main	24	static
+../Src/main.c:66:7:int_to_string	40	static

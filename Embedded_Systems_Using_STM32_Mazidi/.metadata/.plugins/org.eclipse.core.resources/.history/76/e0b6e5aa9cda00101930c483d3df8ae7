@@ -1,0 +1,13 @@
+#ifndef TIMER_INTERRUPT_H_
+#define TIMER_INTERRUPT_H_
+
+// Includes
+#include "stm32f4xx.h"
+
+// Defines
+#define TIM2_CLK_EN	(1UL << 2)
+
+// Function declarations
+
+
+#endif /* TIMER_INTERRUPT_H_ */

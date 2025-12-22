@@ -1,0 +1,3 @@
+../Src/utils.c:9:6:enable_usr_led	4	static
+../Src/utils.c:17:6:blink_usr_led	24	static
+../Src/utils.c:31:6:systick_delay_ms	24	static

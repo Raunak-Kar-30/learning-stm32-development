@@ -1,0 +1,10 @@
+#ifndef USART_INTERRUPT_H_
+#define USART_INTERRUPT_H_
+
+// Includes
+
+// Defines
+
+// Function declarations (public)
+
+#endif /* USART_INTERRUPT_H_ */

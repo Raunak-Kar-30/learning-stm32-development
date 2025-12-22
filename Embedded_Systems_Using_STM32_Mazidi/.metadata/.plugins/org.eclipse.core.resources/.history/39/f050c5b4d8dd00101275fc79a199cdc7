@@ -1,0 +1,45 @@
+// TIMER2 driver program for ADC conversion
+
+// Includes
+#include <timer.h>
+
+// Function declarations (private)
+
+// Setup the timer 2 for ADC conversion - provides the ADC with a timer for starting conversion
+void timer2_setup_adc(int sys_freq)
+{
+	// Enable clock access to TIM2
+	RCC->APB1ENR |= TIM2_CLK_EN;
+
+	// Set the timer pre-scaler such that it provides a clock source of 1MHz = 1000000 Hz
+	// If APB1_FREQ = sys_freq = 16 000 000, then 16000000 / 10000 = 1600. So we get a pre-scaler value of 1600 and TIM2 frequency of 10000 Hz
+	TIM2->PSC = (sys_freq / 10000) - 1;
+
+	// Set the direction of TIMER2 as up-counter (which is set by default but we still set it :-) )
+	TIM2->CR1 &= ~(1UL << 4);
+
+	// Since TIM2 frequency is 10000 Hz, setting the Auto Reload Register to 10000, gives a timer update event every 1 second.
+	TIM2->ARR = 10000-1;
+
+	// Set the TIM2 Count Register (CNT) to 0
+	TIM2->CNT = 0;
+
+	// Select Channel 2 of TIM2 as Compare Mode and select what to do when Compare condition succeeds (i.e. value in CNT reaches the value in CCR register).
+	// For our ADC conversion signal, we will generate a PWM (Pulse Width Modulation - Output in Channel 2 Pin).
+	// Till the CNT register is lower than the CCR2 register value, the channel output is set to high (or active), the moment CCR2 value > CNT,
+	// the channel output is set to low (in-active).
+	// To do this, we enable PWM Mode 1 output in Output Compare 2 Mode bits in CCMR1
+	TIM2->CCMR1 |= (1UL << 14 | 1UL << 13);
+	TIM2->CCMR1 &= ~(1UL << 12);
+
+	// Enable the pre-load register for CCR2, for loading the value of CCR2 everytime the Update Event occurs (the Timer start running from the start)
+
+	// The Capture Compare Register (1 or 2) is either used to store the value to be compared to the CNT register when the channel is setup in Output Compare
+	// Mode, or it is used as a snapshot register that holds the value of the CNT register the moment some input signal is captured from the input channel pin
+	// when the channel is setup in Input Capture Mode
+	// Since in this case we are generating a signal for the ADC to read a value, we need to setup the CCR2 register to compare the value to the CNT register
+
+	// Enable channel 2 in Capture/Compare Enable register for Output Compare (CC2E - Capture/Compare Output Enable bit)
+
+	// Enable the Timer 2
+}

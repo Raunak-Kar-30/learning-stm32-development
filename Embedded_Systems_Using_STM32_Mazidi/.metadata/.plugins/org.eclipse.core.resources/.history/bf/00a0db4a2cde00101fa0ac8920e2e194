@@ -1,0 +1,13 @@
+#ifndef ADC_CONVERSION_H_
+#define ADC_CONVERSION_H_
+
+// Includes
+#include "stm32f4xx.h"
+#include "usart.h"
+#include "timer.h"
+
+// Defines
+
+// Function declarations
+
+#endif /* ADC_CONVERSION_H_ */

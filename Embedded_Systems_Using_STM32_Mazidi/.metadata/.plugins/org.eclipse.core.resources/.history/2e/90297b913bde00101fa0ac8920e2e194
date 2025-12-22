@@ -1,0 +1,22 @@
+#ifndef ADC_CONVERSION_H_
+#define ADC_CONVERSION_H_
+
+// Includes
+#include "stm32f4xx.h"
+#include "timer.h"
+
+// Defines
+#define ADC1_CLK_EN			(1UL << 8)
+#define ADC1_EN				(1UL << 0)
+#define ADC1_TEMP_EN		(1UL << 23)
+#define ADC1_VBAT_EN		(1UL << 22)
+#define ADC1_START_CONV		(1UL << 30)
+#define ADC1_CONT_CONV_EN	(1UL << 1)
+#define ADC1_END_OF_CONV	(1UL << 1)
+
+// Function declarations
+void adc_temp_conv_init(void);
+void start_temp_conversion(void);
+uint32_t adc_read(void);
+
+#endif /* ADC_CONVERSION_H_ */

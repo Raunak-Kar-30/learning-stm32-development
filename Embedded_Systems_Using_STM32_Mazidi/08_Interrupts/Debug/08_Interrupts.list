@@ -1,0 +1,738 @@
+
+08_Interrupts.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   000001c4  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000003c8  080001c4  080001c4  000011c4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  0800058c  08000594  00001594  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  0800058c  0800058c  00001594  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000000  0800058c  0800058c  00001594  2**0
+                  CONTENTS, READONLY
+  5 .preinit_array 00000000  0800058c  08000594  00001594  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  0800058c  0800058c  0000158c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08000590  08000590  00001590  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         00000000  20000000  20000000  00001594  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000001c  20000000  08000594  00002000  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000604  2000001c  08000594  0000201c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000030  00000000  00000000  00001594  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   00001f7f  00000000  00000000  000015c4  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 0000075f  00000000  00000000  00003543  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00000130  00000000  00000000  00003ca8  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_rnglists 000000c4  00000000  00000000  00003dd8  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  00018f85  00000000  00000000  00003e9c  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   00001fd8  00000000  00000000  0001ce21  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    0008ba34  00000000  00000000  0001edf9  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000043  00000000  00000000  000aa82d  2**0
+                  CONTENTS, READONLY
+ 20 .debug_frame  00000288  00000000  00000000  000aa870  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line_str 00000086  00000000  00000000  000aaaf8  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+080001c4 <__do_global_dtors_aux>:
+ 80001c4:	b510      	push	{r4, lr}
+ 80001c6:	4c05      	ldr	r4, [pc, #20]	@ (80001dc <__do_global_dtors_aux+0x18>)
+ 80001c8:	7823      	ldrb	r3, [r4, #0]
+ 80001ca:	b933      	cbnz	r3, 80001da <__do_global_dtors_aux+0x16>
+ 80001cc:	4b04      	ldr	r3, [pc, #16]	@ (80001e0 <__do_global_dtors_aux+0x1c>)
+ 80001ce:	b113      	cbz	r3, 80001d6 <__do_global_dtors_aux+0x12>
+ 80001d0:	4804      	ldr	r0, [pc, #16]	@ (80001e4 <__do_global_dtors_aux+0x20>)
+ 80001d2:	f3af 8000 	nop.w
+ 80001d6:	2301      	movs	r3, #1
+ 80001d8:	7023      	strb	r3, [r4, #0]
+ 80001da:	bd10      	pop	{r4, pc}
+ 80001dc:	20000000 	.word	0x20000000
+ 80001e0:	00000000 	.word	0x00000000
+ 80001e4:	08000574 	.word	0x08000574
+
+080001e8 <frame_dummy>:
+ 80001e8:	b508      	push	{r3, lr}
+ 80001ea:	4b03      	ldr	r3, [pc, #12]	@ (80001f8 <frame_dummy+0x10>)
+ 80001ec:	b11b      	cbz	r3, 80001f6 <frame_dummy+0xe>
+ 80001ee:	4903      	ldr	r1, [pc, #12]	@ (80001fc <frame_dummy+0x14>)
+ 80001f0:	4803      	ldr	r0, [pc, #12]	@ (8000200 <frame_dummy+0x18>)
+ 80001f2:	f3af 8000 	nop.w
+ 80001f6:	bd08      	pop	{r3, pc}
+ 80001f8:	00000000 	.word	0x00000000
+ 80001fc:	20000004 	.word	0x20000004
+ 8000200:	08000574 	.word	0x08000574
+
+08000204 <EXTI15_10_IRQHandler>:
+// ISR (interrupt service routine) for EXTI12 and EXTI 10 (IRQ40) - blink led 2 times
+// We must see from the startup assembly code provided by cubeide to see the IRQ handler name for our particular interrupt.
+// In line 189 of 'startup_stmf446retx.s' we see that the interrupt handler name under the vector table (line 122) is defined as 'EXTI15_10_IRQHandler'
+// So we must use this function name to overwrite the pre-defined ISR with our own ISR for handling interrupt related to EXTI12
+void EXTI15_10_IRQHandler(void)
+{
+ 8000204:	b580      	push	{r7, lr}
+ 8000206:	b082      	sub	sp, #8
+ 8000208:	af00      	add	r7, sp, #0
+	// Check if RCC and pins are setup and setup them if not
+	if(!(RCC->AHB1ENR & (GPIOA_CLK_EN))) RCC->AHB1ENR |= GPIOA_CLK_EN;
+ 800020a:	4b39      	ldr	r3, [pc, #228]	@ (80002f0 <EXTI15_10_IRQHandler+0xec>)
+ 800020c:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800020e:	f003 0301 	and.w	r3, r3, #1
+ 8000212:	2b00      	cmp	r3, #0
+ 8000214:	d105      	bne.n	8000222 <EXTI15_10_IRQHandler+0x1e>
+ 8000216:	4b36      	ldr	r3, [pc, #216]	@ (80002f0 <EXTI15_10_IRQHandler+0xec>)
+ 8000218:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800021a:	4a35      	ldr	r2, [pc, #212]	@ (80002f0 <EXTI15_10_IRQHandler+0xec>)
+ 800021c:	f043 0301 	orr.w	r3, r3, #1
+ 8000220:	6313      	str	r3, [r2, #48]	@ 0x30
+	if((GPIOA->MODER && (1UL << 12)) == 0) GPIOA->MODER |= (1UL << 12);
+ 8000222:	4b34      	ldr	r3, [pc, #208]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000224:	681b      	ldr	r3, [r3, #0]
+ 8000226:	2b00      	cmp	r3, #0
+ 8000228:	d105      	bne.n	8000236 <EXTI15_10_IRQHandler+0x32>
+ 800022a:	4b32      	ldr	r3, [pc, #200]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 800022c:	681b      	ldr	r3, [r3, #0]
+ 800022e:	4a31      	ldr	r2, [pc, #196]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000230:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
+ 8000234:	6013      	str	r3, [r2, #0]
+	if((GPIOA->MODER && (1UL << 13)) == 1) GPIOA->MODER &= ~(1UL << 13);
+ 8000236:	4b2f      	ldr	r3, [pc, #188]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000238:	681b      	ldr	r3, [r3, #0]
+ 800023a:	2b00      	cmp	r3, #0
+ 800023c:	d005      	beq.n	800024a <EXTI15_10_IRQHandler+0x46>
+ 800023e:	4b2d      	ldr	r3, [pc, #180]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000240:	681b      	ldr	r3, [r3, #0]
+ 8000242:	4a2c      	ldr	r2, [pc, #176]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000244:	f423 5300 	bic.w	r3, r3, #8192	@ 0x2000
+ 8000248:	6013      	str	r3, [r2, #0]
+
+	// When the interrupt occurs (at falling edge or button press) the pending register of the corresponding EXTI line gets set
+	// Check which request is being asked for by checking the EXTI Pending register (EXTI->PR)
+	// If interrupt is from EXTI10 (PC10)
+	if(EXTI->PR & (1UL << 10))
+ 800024a:	4b2b      	ldr	r3, [pc, #172]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 800024c:	695b      	ldr	r3, [r3, #20]
+ 800024e:	f403 6380 	and.w	r3, r3, #1024	@ 0x400
+ 8000252:	2b00      	cmp	r3, #0
+ 8000254:	d021      	beq.n	800029a <EXTI15_10_IRQHandler+0x96>
+	{
+		// Turn the LED on and off two times
+		for(int i = 0; i < 2; i++)
+ 8000256:	2300      	movs	r3, #0
+ 8000258:	607b      	str	r3, [r7, #4]
+ 800025a:	e014      	b.n	8000286 <EXTI15_10_IRQHandler+0x82>
+		{
+			GPIOA->BSRR |= (1UL << 6);
+ 800025c:	4b25      	ldr	r3, [pc, #148]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 800025e:	699b      	ldr	r3, [r3, #24]
+ 8000260:	4a24      	ldr	r2, [pc, #144]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000262:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
+ 8000266:	6193      	str	r3, [r2, #24]
+			systick_delay_ms(25);
+ 8000268:	2019      	movs	r0, #25
+ 800026a:	f000 f8fb 	bl	8000464 <systick_delay_ms>
+			GPIOA->BSRR |= (1UL << (6+16));
+ 800026e:	4b21      	ldr	r3, [pc, #132]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000270:	699b      	ldr	r3, [r3, #24]
+ 8000272:	4a20      	ldr	r2, [pc, #128]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 8000274:	f443 0380 	orr.w	r3, r3, #4194304	@ 0x400000
+ 8000278:	6193      	str	r3, [r2, #24]
+			systick_delay_ms(25);
+ 800027a:	2019      	movs	r0, #25
+ 800027c:	f000 f8f2 	bl	8000464 <systick_delay_ms>
+		for(int i = 0; i < 2; i++)
+ 8000280:	687b      	ldr	r3, [r7, #4]
+ 8000282:	3301      	adds	r3, #1
+ 8000284:	607b      	str	r3, [r7, #4]
+ 8000286:	687b      	ldr	r3, [r7, #4]
+ 8000288:	2b01      	cmp	r3, #1
+ 800028a:	dde7      	ble.n	800025c <EXTI15_10_IRQHandler+0x58>
+		}
+
+		// We need to reset this bit at the end of the ISR. Writing 1 to this bit clears it (see RM 0390 - ref manual page 246)
+		EXTI->PR |= (1UL << 10);
+ 800028c:	4b1a      	ldr	r3, [pc, #104]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 800028e:	695b      	ldr	r3, [r3, #20]
+ 8000290:	4a19      	ldr	r2, [pc, #100]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 8000292:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 8000296:	6153      	str	r3, [r2, #20]
+		return;
+ 8000298:	e027      	b.n	80002ea <EXTI15_10_IRQHandler+0xe6>
+	}
+
+	// If interrupt is from EXTI12 (PC12)
+	else if (EXTI->PR & (1UL << 12))
+ 800029a:	4b17      	ldr	r3, [pc, #92]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 800029c:	695b      	ldr	r3, [r3, #20]
+ 800029e:	f403 5380 	and.w	r3, r3, #4096	@ 0x1000
+ 80002a2:	2b00      	cmp	r3, #0
+ 80002a4:	d021      	beq.n	80002ea <EXTI15_10_IRQHandler+0xe6>
+	{
+		// Turn the LED on and off two times
+		for(int i = 0; i < 4; i++)
+ 80002a6:	2300      	movs	r3, #0
+ 80002a8:	603b      	str	r3, [r7, #0]
+ 80002aa:	e014      	b.n	80002d6 <EXTI15_10_IRQHandler+0xd2>
+		{
+			GPIOA->BSRR |= (1UL << 6);
+ 80002ac:	4b11      	ldr	r3, [pc, #68]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 80002ae:	699b      	ldr	r3, [r3, #24]
+ 80002b0:	4a10      	ldr	r2, [pc, #64]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 80002b2:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
+ 80002b6:	6193      	str	r3, [r2, #24]
+			systick_delay_ms(25);
+ 80002b8:	2019      	movs	r0, #25
+ 80002ba:	f000 f8d3 	bl	8000464 <systick_delay_ms>
+			GPIOA->BSRR |= (1UL << (6+16));
+ 80002be:	4b0d      	ldr	r3, [pc, #52]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 80002c0:	699b      	ldr	r3, [r3, #24]
+ 80002c2:	4a0c      	ldr	r2, [pc, #48]	@ (80002f4 <EXTI15_10_IRQHandler+0xf0>)
+ 80002c4:	f443 0380 	orr.w	r3, r3, #4194304	@ 0x400000
+ 80002c8:	6193      	str	r3, [r2, #24]
+			systick_delay_ms(25);
+ 80002ca:	2019      	movs	r0, #25
+ 80002cc:	f000 f8ca 	bl	8000464 <systick_delay_ms>
+		for(int i = 0; i < 4; i++)
+ 80002d0:	683b      	ldr	r3, [r7, #0]
+ 80002d2:	3301      	adds	r3, #1
+ 80002d4:	603b      	str	r3, [r7, #0]
+ 80002d6:	683b      	ldr	r3, [r7, #0]
+ 80002d8:	2b03      	cmp	r3, #3
+ 80002da:	dde7      	ble.n	80002ac <EXTI15_10_IRQHandler+0xa8>
+		}
+
+		// We need to reset this bit at the end of the ISR. Writing 1 to this bit clears it (see RM 0390 - ref manual page 246)
+		EXTI->PR |= (1UL << 12);
+ 80002dc:	4b06      	ldr	r3, [pc, #24]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 80002de:	695b      	ldr	r3, [r3, #20]
+ 80002e0:	4a05      	ldr	r2, [pc, #20]	@ (80002f8 <EXTI15_10_IRQHandler+0xf4>)
+ 80002e2:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
+ 80002e6:	6153      	str	r3, [r2, #20]
+		return;
+ 80002e8:	bf00      	nop
+	}
+}
+ 80002ea:	3708      	adds	r7, #8
+ 80002ec:	46bd      	mov	sp, r7
+ 80002ee:	bd80      	pop	{r7, pc}
+ 80002f0:	40023800 	.word	0x40023800
+ 80002f4:	40020000 	.word	0x40020000
+ 80002f8:	40013c00 	.word	0x40013c00
+
+080002fc <main>:
+
+// Function declarations
+
+// Main functions
+int main(void)
+{
+ 80002fc:	b580      	push	{r7, lr}
+ 80002fe:	af00      	add	r7, sp, #0
+	// Enable the on board USR LED
+	enable_usr_led();
+ 8000300:	f000 f868 	bl	80003d4 <enable_usr_led>
+
+	// Initialize the USART RXTX using interrupts
+	// usart2_rxtx_interrup_init();
+
+	// Blink the LED using SysTick interrupt
+	blink_led_systick_interrupt();
+ 8000304:	f000 f802 	bl	800030c <blink_led_systick_interrupt>
+
+	// Blink an LED using timer 2 interrupt
+	//blink_led_timer_interrupt();
+
+	while(1);
+ 8000308:	bf00      	nop
+ 800030a:	e7fd      	b.n	8000308 <main+0xc>
+
+0800030c <blink_led_systick_interrupt>:
+
+// Function declarations
+
+// Functions
+void blink_led_systick_interrupt(void)
+{
+ 800030c:	b480      	push	{r7}
+ 800030e:	af00      	add	r7, sp, #0
+  \details Disables IRQ interrupts by setting special-purpose register PRIMASK.
+           Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE void __disable_irq(void)
+{
+  __ASM volatile ("cpsid i" : : : "memory");
+ 8000310:	b672      	cpsid	i
+}
+ 8000312:	bf00      	nop
+	// Disable global interrupts
+	__disable_irq();
+
+	// Disable the timer
+	SysTick->CTRL &= ~(1UL << 0);
+ 8000314:	4b0a      	ldr	r3, [pc, #40]	@ (8000340 <blink_led_systick_interrupt+0x34>)
+ 8000316:	681b      	ldr	r3, [r3, #0]
+ 8000318:	4a09      	ldr	r2, [pc, #36]	@ (8000340 <blink_led_systick_interrupt+0x34>)
+ 800031a:	f023 0301 	bic.w	r3, r3, #1
+ 800031e:	6013      	str	r3, [r2, #0]
+
+	// Load the SysTick Reload Value register with 16000-1 thus creating a timer of 8000000/16000000 = 0.5 second
+	SysTick->LOAD = 8000000 - 1;
+ 8000320:	4b07      	ldr	r3, [pc, #28]	@ (8000340 <blink_led_systick_interrupt+0x34>)
+ 8000322:	4a08      	ldr	r2, [pc, #32]	@ (8000344 <blink_led_systick_interrupt+0x38>)
+ 8000324:	605a      	str	r2, [r3, #4]
+	// since they are enabled by default. The priority of interrupts from 1-15 is set by the System Handler Priority Register (SHPR)
+	// We can set the priority of the SysTick interrupt using the NVIC_SetPriority() since it is mapped to the SHPR.
+
+	// Enable the SysTick timer and set the clock source to processor clock and set the TICKINT bit to generate an interrupt -
+	// every time the Current timer counts down to 0
+	SysTick->CTRL |= (1UL << 0 | 1UL << 1 | 1UL << 2);
+ 8000326:	4b06      	ldr	r3, [pc, #24]	@ (8000340 <blink_led_systick_interrupt+0x34>)
+ 8000328:	681b      	ldr	r3, [r3, #0]
+ 800032a:	4a05      	ldr	r2, [pc, #20]	@ (8000340 <blink_led_systick_interrupt+0x34>)
+ 800032c:	f043 0307 	orr.w	r3, r3, #7
+ 8000330:	6013      	str	r3, [r2, #0]
+  __ASM volatile ("cpsie i" : : : "memory");
+ 8000332:	b662      	cpsie	i
+}
+ 8000334:	bf00      	nop
+
+	// Enable the global interrupts
+	__enable_irq();
+}
+ 8000336:	bf00      	nop
+ 8000338:	46bd      	mov	sp, r7
+ 800033a:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 800033e:	4770      	bx	lr
+ 8000340:	e000e010 	.word	0xe000e010
+ 8000344:	007a11ff 	.word	0x007a11ff
+
+08000348 <SysTick_Handler>:
+
+// Write the Interrupt Service routine for the SysTick interrupt.
+// For that we redefine the SysTick_Handler() function in 'startup_stm32f446retx.s' in line148
+void SysTick_Handler(void)
+{
+ 8000348:	b480      	push	{r7}
+ 800034a:	af00      	add	r7, sp, #0
+	// Toggle the LED whenever the SysTick interrupt is generated
+	GPIOA->ODR ^= (1UL << 5);
+ 800034c:	4b05      	ldr	r3, [pc, #20]	@ (8000364 <SysTick_Handler+0x1c>)
+ 800034e:	695b      	ldr	r3, [r3, #20]
+ 8000350:	4a04      	ldr	r2, [pc, #16]	@ (8000364 <SysTick_Handler+0x1c>)
+ 8000352:	f083 0320 	eor.w	r3, r3, #32
+ 8000356:	6153      	str	r3, [r2, #20]
+}
+ 8000358:	bf00      	nop
+ 800035a:	46bd      	mov	sp, r7
+ 800035c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000360:	4770      	bx	lr
+ 8000362:	bf00      	nop
+ 8000364:	40020000 	.word	0x40020000
+
+08000368 <TIM2_IRQHandler>:
+}
+
+// ISR for the TIM2 interrupt
+// We redefine the TIM2_IRQHandler() in line 177 of 'startup_stm32f446retx.s' file
+void TIM2_IRQHandler(void)
+{
+ 8000368:	b480      	push	{r7}
+ 800036a:	af00      	add	r7, sp, #0
+	// Clear the Update Interrupt Flag bit in the status register
+	TIM2->SR &= ~(1UL << 0);
+ 800036c:	f04f 4380 	mov.w	r3, #1073741824	@ 0x40000000
+ 8000370:	691b      	ldr	r3, [r3, #16]
+ 8000372:	f04f 4280 	mov.w	r2, #1073741824	@ 0x40000000
+ 8000376:	f023 0301 	bic.w	r3, r3, #1
+ 800037a:	6113      	str	r3, [r2, #16]
+
+	// Toggle the LED
+	GPIOA->ODR ^= (1UL << 5);
+ 800037c:	4b05      	ldr	r3, [pc, #20]	@ (8000394 <TIM2_IRQHandler+0x2c>)
+ 800037e:	695b      	ldr	r3, [r3, #20]
+ 8000380:	4a04      	ldr	r2, [pc, #16]	@ (8000394 <TIM2_IRQHandler+0x2c>)
+ 8000382:	f083 0320 	eor.w	r3, r3, #32
+ 8000386:	6153      	str	r3, [r2, #20]
+}
+ 8000388:	bf00      	nop
+ 800038a:	46bd      	mov	sp, r7
+ 800038c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000390:	4770      	bx	lr
+ 8000392:	bf00      	nop
+ 8000394:	40020000 	.word	0x40020000
+
+08000398 <USART2_IRQHandler>:
+	__enable_irq();
+}
+
+// Redefine the ISR for USART interrupt request. For that we redefine the function 'USART2_IRQHandler()' defined in line 187 of 'startup_stm32f446retx.s'
+void USART2_IRQHandler(void)
+{
+ 8000398:	b580      	push	{r7, lr}
+ 800039a:	b082      	sub	sp, #8
+ 800039c:	af00      	add	r7, sp, #0
+	char data;
+
+	// We need to poll the RXNE bit anymore, since the USART module automatically generates an interrupt whenever the RXNE bit is set
+	// We just check if the RXNE bit is set, and if so then read the data register
+	if(USART2->SR & (1UL << 5))
+ 800039e:	4b0c      	ldr	r3, [pc, #48]	@ (80003d0 <USART2_IRQHandler+0x38>)
+ 80003a0:	681b      	ldr	r3, [r3, #0]
+ 80003a2:	f003 0320 	and.w	r3, r3, #32
+ 80003a6:	2b00      	cmp	r3, #0
+ 80003a8:	d00d      	beq.n	80003c6 <USART2_IRQHandler+0x2e>
+	{
+		data = USART2->DR;
+ 80003aa:	4b09      	ldr	r3, [pc, #36]	@ (80003d0 <USART2_IRQHandler+0x38>)
+ 80003ac:	685b      	ldr	r3, [r3, #4]
+ 80003ae:	71fb      	strb	r3, [r7, #7]
+		if(data >= '0' && data <= '9') blink_usr_led(data-48);
+ 80003b0:	79fb      	ldrb	r3, [r7, #7]
+ 80003b2:	2b2f      	cmp	r3, #47	@ 0x2f
+ 80003b4:	d907      	bls.n	80003c6 <USART2_IRQHandler+0x2e>
+ 80003b6:	79fb      	ldrb	r3, [r7, #7]
+ 80003b8:	2b39      	cmp	r3, #57	@ 0x39
+ 80003ba:	d804      	bhi.n	80003c6 <USART2_IRQHandler+0x2e>
+ 80003bc:	79fb      	ldrb	r3, [r7, #7]
+ 80003be:	3b30      	subs	r3, #48	@ 0x30
+ 80003c0:	4618      	mov	r0, r3
+ 80003c2:	f000 f825 	bl	8000410 <blink_usr_led>
+	}
+}
+ 80003c6:	bf00      	nop
+ 80003c8:	3708      	adds	r7, #8
+ 80003ca:	46bd      	mov	sp, r7
+ 80003cc:	bd80      	pop	{r7, pc}
+ 80003ce:	bf00      	nop
+ 80003d0:	40004400 	.word	0x40004400
+
+080003d4 <enable_usr_led>:
+
+// Function declarations (private functions)
+
+// Enable USR_LED (PA5)
+void enable_usr_led(void)
+{
+ 80003d4:	b480      	push	{r7}
+ 80003d6:	af00      	add	r7, sp, #0
+	RCC->AHB1ENR |= (1UL << 0);
+ 80003d8:	4b0b      	ldr	r3, [pc, #44]	@ (8000408 <enable_usr_led+0x34>)
+ 80003da:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 80003dc:	4a0a      	ldr	r2, [pc, #40]	@ (8000408 <enable_usr_led+0x34>)
+ 80003de:	f043 0301 	orr.w	r3, r3, #1
+ 80003e2:	6313      	str	r3, [r2, #48]	@ 0x30
+	GPIOA->MODER |= (1UL << 10);
+ 80003e4:	4b09      	ldr	r3, [pc, #36]	@ (800040c <enable_usr_led+0x38>)
+ 80003e6:	681b      	ldr	r3, [r3, #0]
+ 80003e8:	4a08      	ldr	r2, [pc, #32]	@ (800040c <enable_usr_led+0x38>)
+ 80003ea:	f443 6380 	orr.w	r3, r3, #1024	@ 0x400
+ 80003ee:	6013      	str	r3, [r2, #0]
+	GPIOA->MODER &= ~(1UL << 11);
+ 80003f0:	4b06      	ldr	r3, [pc, #24]	@ (800040c <enable_usr_led+0x38>)
+ 80003f2:	681b      	ldr	r3, [r3, #0]
+ 80003f4:	4a05      	ldr	r2, [pc, #20]	@ (800040c <enable_usr_led+0x38>)
+ 80003f6:	f423 6300 	bic.w	r3, r3, #2048	@ 0x800
+ 80003fa:	6013      	str	r3, [r2, #0]
+}
+ 80003fc:	bf00      	nop
+ 80003fe:	46bd      	mov	sp, r7
+ 8000400:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000404:	4770      	bx	lr
+ 8000406:	bf00      	nop
+ 8000408:	40023800 	.word	0x40023800
+ 800040c:	40020000 	.word	0x40020000
+
+08000410 <blink_usr_led>:
+
+// Blink USR_LED n number of times (useful for testing or other functionalities)
+void blink_usr_led(int times)
+{
+ 8000410:	b580      	push	{r7, lr}
+ 8000412:	b084      	sub	sp, #16
+ 8000414:	af00      	add	r7, sp, #0
+ 8000416:	6078      	str	r0, [r7, #4]
+	enable_usr_led();
+ 8000418:	f7ff ffdc 	bl	80003d4 <enable_usr_led>
+
+	for(int i = 0; i < times; i++)
+ 800041c:	2300      	movs	r3, #0
+ 800041e:	60fb      	str	r3, [r7, #12]
+ 8000420:	e014      	b.n	800044c <blink_usr_led+0x3c>
+	{
+		GPIOA->BSRR |= (1UL << 5);
+ 8000422:	4b0f      	ldr	r3, [pc, #60]	@ (8000460 <blink_usr_led+0x50>)
+ 8000424:	699b      	ldr	r3, [r3, #24]
+ 8000426:	4a0e      	ldr	r2, [pc, #56]	@ (8000460 <blink_usr_led+0x50>)
+ 8000428:	f043 0320 	orr.w	r3, r3, #32
+ 800042c:	6193      	str	r3, [r2, #24]
+		systick_delay_ms(50);
+ 800042e:	2032      	movs	r0, #50	@ 0x32
+ 8000430:	f000 f818 	bl	8000464 <systick_delay_ms>
+		GPIOA->BSRR |= (1UL << (5+16));
+ 8000434:	4b0a      	ldr	r3, [pc, #40]	@ (8000460 <blink_usr_led+0x50>)
+ 8000436:	699b      	ldr	r3, [r3, #24]
+ 8000438:	4a09      	ldr	r2, [pc, #36]	@ (8000460 <blink_usr_led+0x50>)
+ 800043a:	f443 1300 	orr.w	r3, r3, #2097152	@ 0x200000
+ 800043e:	6193      	str	r3, [r2, #24]
+		systick_delay_ms(50);
+ 8000440:	2032      	movs	r0, #50	@ 0x32
+ 8000442:	f000 f80f 	bl	8000464 <systick_delay_ms>
+	for(int i = 0; i < times; i++)
+ 8000446:	68fb      	ldr	r3, [r7, #12]
+ 8000448:	3301      	adds	r3, #1
+ 800044a:	60fb      	str	r3, [r7, #12]
+ 800044c:	68fa      	ldr	r2, [r7, #12]
+ 800044e:	687b      	ldr	r3, [r7, #4]
+ 8000450:	429a      	cmp	r2, r3
+ 8000452:	dbe6      	blt.n	8000422 <blink_usr_led+0x12>
+	}
+}
+ 8000454:	bf00      	nop
+ 8000456:	bf00      	nop
+ 8000458:	3710      	adds	r7, #16
+ 800045a:	46bd      	mov	sp, r7
+ 800045c:	bd80      	pop	{r7, pc}
+ 800045e:	bf00      	nop
+ 8000460:	40020000 	.word	0x40020000
+
+08000464 <systick_delay_ms>:
+
+// Simple program to delay in milli-seconds using the systick timer
+void systick_delay_ms(int ms)
+{
+ 8000464:	b480      	push	{r7}
+ 8000466:	b085      	sub	sp, #20
+ 8000468:	af00      	add	r7, sp, #0
+ 800046a:	6078      	str	r0, [r7, #4]
+	// Disable the timer if enabled
+	if(SysTick->CTRL & (1UL << 0)) SysTick->CTRL &= ~(1UL << 0);
+ 800046c:	4b19      	ldr	r3, [pc, #100]	@ (80004d4 <systick_delay_ms+0x70>)
+ 800046e:	681b      	ldr	r3, [r3, #0]
+ 8000470:	f003 0301 	and.w	r3, r3, #1
+ 8000474:	2b00      	cmp	r3, #0
+ 8000476:	d005      	beq.n	8000484 <systick_delay_ms+0x20>
+ 8000478:	4b16      	ldr	r3, [pc, #88]	@ (80004d4 <systick_delay_ms+0x70>)
+ 800047a:	681b      	ldr	r3, [r3, #0]
+ 800047c:	4a15      	ldr	r2, [pc, #84]	@ (80004d4 <systick_delay_ms+0x70>)
+ 800047e:	f023 0301 	bic.w	r3, r3, #1
+ 8000482:	6013      	str	r3, [r2, #0]
+
+	// We set the Systick load value to 7999, so the systick timer counts from 7999 to 0 (8000 clock cycles).
+	// Thus we get a timer of 16000/16000000 = 0.001 secs
+	SysTick->LOAD = 16000 - 1;
+ 8000484:	4b13      	ldr	r3, [pc, #76]	@ (80004d4 <systick_delay_ms+0x70>)
+ 8000486:	f643 627f 	movw	r2, #15999	@ 0x3e7f
+ 800048a:	605a      	str	r2, [r3, #4]
+	SysTick->CTRL |= (1UL << 0);		// Enable the timer
+ 800048c:	4b11      	ldr	r3, [pc, #68]	@ (80004d4 <systick_delay_ms+0x70>)
+ 800048e:	681b      	ldr	r3, [r3, #0]
+ 8000490:	4a10      	ldr	r2, [pc, #64]	@ (80004d4 <systick_delay_ms+0x70>)
+ 8000492:	f043 0301 	orr.w	r3, r3, #1
+ 8000496:	6013      	str	r3, [r2, #0]
+
+	for(int i = 0; i < ms; i++)
+ 8000498:	2300      	movs	r3, #0
+ 800049a:	60fb      	str	r3, [r7, #12]
+ 800049c:	e00f      	b.n	80004be <systick_delay_ms+0x5a>
+	{
+		while(!(SysTick->CTRL & (1UL << 16)));
+ 800049e:	bf00      	nop
+ 80004a0:	4b0c      	ldr	r3, [pc, #48]	@ (80004d4 <systick_delay_ms+0x70>)
+ 80004a2:	681b      	ldr	r3, [r3, #0]
+ 80004a4:	f403 3380 	and.w	r3, r3, #65536	@ 0x10000
+ 80004a8:	2b00      	cmp	r3, #0
+ 80004aa:	d0f9      	beq.n	80004a0 <systick_delay_ms+0x3c>
+		SysTick->CTRL &= ~(1UL << 16);
+ 80004ac:	4b09      	ldr	r3, [pc, #36]	@ (80004d4 <systick_delay_ms+0x70>)
+ 80004ae:	681b      	ldr	r3, [r3, #0]
+ 80004b0:	4a08      	ldr	r2, [pc, #32]	@ (80004d4 <systick_delay_ms+0x70>)
+ 80004b2:	f423 3380 	bic.w	r3, r3, #65536	@ 0x10000
+ 80004b6:	6013      	str	r3, [r2, #0]
+	for(int i = 0; i < ms; i++)
+ 80004b8:	68fb      	ldr	r3, [r7, #12]
+ 80004ba:	3301      	adds	r3, #1
+ 80004bc:	60fb      	str	r3, [r7, #12]
+ 80004be:	68fa      	ldr	r2, [r7, #12]
+ 80004c0:	687b      	ldr	r3, [r7, #4]
+ 80004c2:	429a      	cmp	r2, r3
+ 80004c4:	dbeb      	blt.n	800049e <systick_delay_ms+0x3a>
+	}
+}
+ 80004c6:	bf00      	nop
+ 80004c8:	bf00      	nop
+ 80004ca:	3714      	adds	r7, #20
+ 80004cc:	46bd      	mov	sp, r7
+ 80004ce:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80004d2:	4770      	bx	lr
+ 80004d4:	e000e010 	.word	0xe000e010
+
+080004d8 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 80004d8:	480d      	ldr	r0, [pc, #52]	@ (8000510 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 80004da:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 80004dc:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 80004e0:	480c      	ldr	r0, [pc, #48]	@ (8000514 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 80004e2:	490d      	ldr	r1, [pc, #52]	@ (8000518 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 80004e4:	4a0d      	ldr	r2, [pc, #52]	@ (800051c <LoopForever+0xe>)
+  movs r3, #0
+ 80004e6:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 80004e8:	e002      	b.n	80004f0 <LoopCopyDataInit>
+
+080004ea <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 80004ea:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 80004ec:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 80004ee:	3304      	adds	r3, #4
+
+080004f0 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 80004f0:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 80004f2:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 80004f4:	d3f9      	bcc.n	80004ea <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 80004f6:	4a0a      	ldr	r2, [pc, #40]	@ (8000520 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80004f8:	4c0a      	ldr	r4, [pc, #40]	@ (8000524 <LoopForever+0x16>)
+  movs r3, #0
+ 80004fa:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80004fc:	e001      	b.n	8000502 <LoopFillZerobss>
+
+080004fe <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80004fe:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8000500:	3204      	adds	r2, #4
+
+08000502 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 8000502:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8000504:	d3fb      	bcc.n	80004fe <FillZerobss>
+
+
+/* Call static constructors */
+  bl __libc_init_array
+ 8000506:	f000 f811 	bl	800052c <__libc_init_array>
+/* Call the application's entry point.*/
+
+  bl main
+ 800050a:	f7ff fef7 	bl	80002fc <main>
+
+0800050e <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 800050e:	e7fe      	b.n	800050e <LoopForever>
+  ldr   r0, =_estack
+ 8000510:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
+ 8000514:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8000518:	20000000 	.word	0x20000000
+  ldr r2, =_sidata
+ 800051c:	08000594 	.word	0x08000594
+  ldr r2, =_sbss
+ 8000520:	20000000 	.word	0x20000000
+  ldr r4, =_ebss
+ 8000524:	2000001c 	.word	0x2000001c
+
+08000528 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8000528:	e7fe      	b.n	8000528 <ADC_IRQHandler>
+	...
+
+0800052c <__libc_init_array>:
+ 800052c:	b570      	push	{r4, r5, r6, lr}
+ 800052e:	4d0d      	ldr	r5, [pc, #52]	@ (8000564 <__libc_init_array+0x38>)
+ 8000530:	4c0d      	ldr	r4, [pc, #52]	@ (8000568 <__libc_init_array+0x3c>)
+ 8000532:	1b64      	subs	r4, r4, r5
+ 8000534:	10a4      	asrs	r4, r4, #2
+ 8000536:	2600      	movs	r6, #0
+ 8000538:	42a6      	cmp	r6, r4
+ 800053a:	d109      	bne.n	8000550 <__libc_init_array+0x24>
+ 800053c:	4d0b      	ldr	r5, [pc, #44]	@ (800056c <__libc_init_array+0x40>)
+ 800053e:	4c0c      	ldr	r4, [pc, #48]	@ (8000570 <__libc_init_array+0x44>)
+ 8000540:	f000 f818 	bl	8000574 <_init>
+ 8000544:	1b64      	subs	r4, r4, r5
+ 8000546:	10a4      	asrs	r4, r4, #2
+ 8000548:	2600      	movs	r6, #0
+ 800054a:	42a6      	cmp	r6, r4
+ 800054c:	d105      	bne.n	800055a <__libc_init_array+0x2e>
+ 800054e:	bd70      	pop	{r4, r5, r6, pc}
+ 8000550:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000554:	4798      	blx	r3
+ 8000556:	3601      	adds	r6, #1
+ 8000558:	e7ee      	b.n	8000538 <__libc_init_array+0xc>
+ 800055a:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800055e:	4798      	blx	r3
+ 8000560:	3601      	adds	r6, #1
+ 8000562:	e7f2      	b.n	800054a <__libc_init_array+0x1e>
+ 8000564:	0800058c 	.word	0x0800058c
+ 8000568:	0800058c 	.word	0x0800058c
+ 800056c:	0800058c 	.word	0x0800058c
+ 8000570:	08000590 	.word	0x08000590
+
+08000574 <_init>:
+ 8000574:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000576:	bf00      	nop
+ 8000578:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800057a:	bc08      	pop	{r3}
+ 800057c:	469e      	mov	lr, r3
+ 800057e:	4770      	bx	lr
+
+08000580 <_fini>:
+ 8000580:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000582:	bf00      	nop
+ 8000584:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000586:	bc08      	pop	{r3}
+ 8000588:	469e      	mov	lr, r3
+ 800058a:	4770      	bx	lr

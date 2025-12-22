@@ -1,0 +1,12 @@
+// Driver program for blinking an LED using a timer and interrupts instead of polling the Counter (CNT) register
+
+// Includes
+#include "timer_interrupt.h"
+
+// Function declarations
+
+// Functions
+void blink_led_timer_interrupt()
+{
+
+}

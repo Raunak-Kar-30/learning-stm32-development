@@ -1,0 +1,13 @@
+/*
+ * dac_signal_gen.c
+ *
+ *  Created on: Dec 20, 2025
+ *      Author: raunak-kar
+ */
+
+#ifndef DAC_SIGNAL_GEN_C_
+#define DAC_SIGNAL_GEN_C_
+
+
+
+#endif /* DAC_SIGNAL_GEN_C_ */

@@ -1,0 +1,2 @@
+../Src/usart.c:9:6:usart2_init	1
+../Src/usart.c:44:6:usart2_write	3

@@ -1,0 +1,22 @@
+// Driver program for using the ARM system timer - SysTick using interrupts rather than polling the COUNTFLAG in SysTick status register
+
+// Includes
+#include "systick_interrupt.h"
+
+// Function declarations
+
+// Functions
+void systick_delay_ms_interrupt(void)
+{
+	// Disable global interrupts
+	__disable_irq();
+
+	// Disable the timer and enable tick-interrupt bit to generate an interrupt every time the Current timer counts down to 0
+	SysTick->CTRL &= ~(1UL << 0);
+
+	// Load the SysTick Reload Value register with 16000-1 thus creating a timer of 16000/16000000 = 0.001 second
+	SysTick->LOAD = 16000-1;
+
+	// Enable the global interrupts
+	__enable_irq();
+}

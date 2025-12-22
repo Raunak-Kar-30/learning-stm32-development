@@ -1,0 +1,13 @@
+/*
+ * timer_interrupt.h
+ *
+ *  Created on: Dec 16, 2025
+ *      Author: raunak-kar
+ */
+
+#ifndef TIMER_INTERRUPT_H_
+#define TIMER_INTERRUPT_H_
+
+
+
+#endif /* TIMER_INTERRUPT_H_ */

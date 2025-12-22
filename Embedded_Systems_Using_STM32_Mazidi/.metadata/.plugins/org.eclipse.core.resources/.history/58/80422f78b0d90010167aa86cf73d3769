@@ -1,0 +1,33 @@
+// Program to showase the usage of interrupts for carrying out various tasks instead of polling
+
+// Includes
+#include "stm32f4xx.h"
+#include "interrupts.h"
+#include "utils.h"
+
+// Defines
+
+// Function declarations
+
+// Main functions
+int main(void)
+{
+	// Blink LED using button using interrupt generation
+	// blink_led_on_button_press();
+
+	// LED test
+	// Turn the LED on and off
+	RCC->AHB1ENR |= (1UL << 0);
+	GPIOA->MODER |= (1UL << 6);
+	GPIOA->MODER &= ~(1UL << 7);
+	while(1)
+	{
+		GPIOA->BSRR |= (1UL << 3);
+		systick_delay_ms(25);
+		GPIOA->BSRR |= (1UL << (3+16));
+		systick_delay_ms(25);
+	}
+
+	while(1);
+}
+

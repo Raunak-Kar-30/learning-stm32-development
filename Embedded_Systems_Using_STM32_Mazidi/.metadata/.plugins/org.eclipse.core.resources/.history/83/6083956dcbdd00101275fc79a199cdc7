@@ -1,0 +1,8 @@
+// TIMER2 driver program for ADC conversion
+
+// Includes
+#include <timer.h>
+
+// Function declarations (private)
+
+// Setup the timer 2 for ADC conversion - provides the ADC with a timer for starting conversion

@@ -1,0 +1,18 @@
+// USART2 driver program to display the value read and converted using ADC
+
+// Includes
+#include <usart.h>
+
+// Function declarations (private)
+
+// Init function - Initialize USART2
+void usart2_init(void)
+{
+
+}
+
+// USART 2 write function - write the value converted by ADC to the computer serial terminal
+void usart2_write(int data)
+{
+
+}

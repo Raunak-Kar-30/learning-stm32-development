@@ -1,0 +1,219 @@
+BARE-METAL MINI PROJECT SET (NO RTOS)
+
+================================
+NON-REAL-TIME MINI PROJECTS
+================================
+
+1. GPIO Control + Debounced Button
+   - LED ON/OFF using button
+   - Proper software debouncing
+   - No delay-based debouncing
+
+2. UART Command-Line Interface
+   - Simple CLI over UART
+   - Commands: LED ON/OFF, STATUS
+   - Blocking TX, non-blocking RX
+
+3. Internal Flash Parameter Storage
+   - Store configuration data
+   - Read after reset
+   - Handle erase/write safely
+
+4. I2C Sensor Reader (Polling)
+   - Read temperature/light sensor
+   - Handle NACK / bus errors
+   - No interrupts required
+
+5. RTC Timekeeping (Basic)
+   - Configure RTC
+   - Read current date/time
+   - Backup time across reset
+
+================================
+REAL-TIME MINI PROJECTS
+================================
+
+6. Timer-Based LED Scheduler
+   - Hardware timer interrupt every 10ms
+   - Precise LED toggling
+   - No delays anywhere
+
+7. ADC Sampling With Timer Trigger
+   - Timer triggers ADC periodically
+   - ADC ISR stores samples
+   - Fixed sampling interval
+
+8. Interrupt-Driven UART (Ring Buffer)
+   - RX interrupt fills circular buffer
+   - Main loop parses input
+   - No busy waiting
+
+9. SPI Driver (Interrupt or DMA-Based)
+   - SPI transmit/receive without blocking
+   - Handle chip-select correctly
+   - Data integrity verification
+
+10. RTC Alarm Interrupt
+    - Configure RTC alarm
+    - Wake system on alarm event
+    - Event-driven logic
+
+================================
+INTEGRATION MINI PROJECTS
+================================
+
+11. SD Card Interface (SPI Mode)
+    - Initialize SD card
+    - Read/write blocks
+    - Handle timeouts and errors
+
+12. Multi-Task Superloop (Manual Scheduler)
+    - Sensor task
+    - Logger task (SD card)
+    - Communication task
+    - No RTOS, non-blocking design
+
+13. Mini Data Logger (Bare-Metal)
+    - Timer-based periodic sampling
+    - Timestamp data using RTC
+    - Store data to SD card
+    - UART command to dump status
+
+================================
+LOW-POWER PRACTICE
+================================
+
+14. Low-Power RTC Wakeup
+    - Enter sleep (WFI)
+    - RTC alarm wakes MCU
+    - Measure sleep duration
+
+================================
+RULES FOR ALL PROJECTS
+================================
+
+- No RTOS
+- No delay() for timing
+- Use hardware timers
+- ISRs must be minimal
+- Main loop must be non-blocking
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
+BARE-METAL INTENSIVE EXECUTION SCHEDULE (NO RTOS)
+
+TOTAL DURATION: 1.5–2 WEEKS
+DAILY EFFORT: 4–6 HOURS
+
+=================================
+DAY 1: CORE IO + TOOLCHAIN
+=================================
+- Toolchain / debugger setup
+- GPIO output control (no delay())
+- Button input
+- Time-based debouncing
+
+=================================
+DAY 2: UART + FLASH
+=================================
+- UART TX/RX
+- Non-blocking RX
+- Simple command parser
+- Internal Flash write/read
+- Persistence after reset
+
+=================================
+DAY 3: TIMERS + RTC
+=================================
+- Hardware timer interrupt (10 ms)
+- Software timers from base timer
+- RTC setup (time/date read)
+- Verify RTC after reset
+
+=================================
+DAY 4: ADC (REAL-TIME)
+=================================
+- ADC single-channel read
+- Timer-triggered ADC
+- ADC ISR buffering
+- Sample interval verification
+
+=================================
+DAY 5: UART INTERRUPTS
+=================================
+- UART RX interrupt
+- Circular buffer
+- Command parsing from buffer
+- No busy waiting
+
+=================================
+DAY 6: SPI DRIVER
+=================================
+- SPI master init
+- Chip select handling
+- SPI blocking test
+- SPI non-blocking (IRQ or DMA)
+
+=================================
+DAY 7: SD CARD (SPI MODE)
+=================================
+- SD card initialization
+- Block read/write
+- Error & timeout handling
+
+=================================
+DAY 8: RTC EVENTS + LOW POWER
+=================================
+- RTC alarm interrupt
+- Event-based wakeup
+- Enter sleep (WFI)
+- Wake via RTC
+
+=================================
+DAY 9: MANUAL SCHEDULING
+=================================
+- Define tasks:
+  - Sensor
+  - Logger
+  - Communication
+- Event/flag-based execution
+- Fully non-blocking superloop
+
+=================================
+DAY 10: MINI DATA LOGGER
+=================================
+- Timer-based periodic sampling
+- RTC timestamping
+- Store to SD card
+- Basic integrity checks
+
+=================================
+DAY 11: SYSTEM INTEGRATION
+=================================
+- Combine ADC + RTC + SD + UART
+- Long-run test (1–2 hours)
+- Stress test buffers
+
+=================================
+DAY 12: POLISH & DOCS
+=================================
+- Remove dead code
+- ISR review (short & deterministic)
+- Architecture notes
+- Known limitations
+
+=================================
+EXIT CRITERIA
+=================================
+- Zero delay() usage
+- Timer-controlled timing
+- Short ISRs
+- Non-blocking main loop
+- Stable multi-hour operation
+
+READY FOR:
+- RTOS
+- BMS
+- Safety Helmet
+- STM32 Oscilloscope

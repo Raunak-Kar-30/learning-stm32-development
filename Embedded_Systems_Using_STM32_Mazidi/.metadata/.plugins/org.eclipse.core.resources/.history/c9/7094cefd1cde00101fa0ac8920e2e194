@@ -1,0 +1,33 @@
+// USART2 driver program to display the value read and converted using ADC
+
+// Includes
+#include <usart.h>
+
+// Function declarations (private)
+
+// Init function - Initialize USART2
+void usart2_init(void)
+{
+	// Enable clock access to USART2 and Port A
+
+	// Configure PA2 for USART2 TX (transfer)
+
+	// Set the over-sampling rate to over sampling by 16. Set the OVER8 bit in CR1 to 0.
+	// Set the Word length to 1start bit, 8 data bits
+
+	// Select the number of stop bits in Control Register 2. We just set the control register 2 to 0.
+
+	// Set up the Baud Rate Register such as to get a baud-rate of 115200 with a sys-freq of 16MHz
+
+	// Set control register 3 to 0
+
+	// Enable TX in Control register 1
+
+	// Enable USART2 in CR1
+}
+
+// USART 2 write function - write the value converted by ADC to the computer serial terminal
+void usart2_write(int data)
+{
+
+}

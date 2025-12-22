@@ -1,0 +1,10 @@
+23:45:20 **** Incremental Build of configuration Debug for project 06_Systick_Driver ****
+make -j12 all 
+arm-none-eabi-size  06_Systick_Driver.elf 
+   text	   data	    bss	    dec	    hex	filename
+   1016	      0	   1568	   2584	    a18	06_Systick_Driver.elf
+Finished building: default.size.stdout
+ 
+
+23:45:20 Build Finished. 0 errors, 0 warnings. (took 86ms)
+

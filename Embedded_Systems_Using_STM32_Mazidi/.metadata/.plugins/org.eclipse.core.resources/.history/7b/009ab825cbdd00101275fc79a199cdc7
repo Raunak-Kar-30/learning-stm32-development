@@ -1,0 +1,11 @@
+#ifndef TIMER2_H_
+#define TIMER2_H_
+
+// Includes
+#include "stm32f4xx.h"
+
+// Defines
+
+// Function declarations
+
+#endif /* TIMER2_H_ */

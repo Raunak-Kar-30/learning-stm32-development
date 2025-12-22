@@ -1,0 +1,4 @@
+../Src/seven_segment.c:15:6:seven_segment_init	1
+../Src/seven_segment.c:27:6:test_seven_segment	1
+../Src/seven_segment.c:49:6:write_to_seven_segment	13
+../Src/seven_segment.c:135:6:show_error	3

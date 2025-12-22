@@ -1,0 +1,35 @@
+// Program to showase the usage of interrupts for carrying out various tasks instead of polling
+
+// Includes
+#include "stm32f4xx.h"
+#include <exti_interrupts.h>
+#include "usart_interrupt.h"
+#include "systick_interrupt.h"
+#include "timer_interrupt.h"
+#include "utils.h"
+
+// Defines
+
+// Function declarations
+
+// Main functions
+int main(void)
+{
+	// Enable the on board USR LED
+	enable_usr_led();
+
+	// Blink LED using button using interrupt generation
+	//blink_led_on_button_press();
+
+	// Initialize the USART RXTX using interrupts
+	// usart2_rxtx_interrup_init();
+
+	// Blink the LED using SysTick interrupt
+	//blink_led_systick_interrupt();
+
+	// Blink an LED using timer 2 interrupt
+	blink_led_timer_interrupt();
+
+	while(1);
+}
+

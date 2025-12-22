@@ -1,0 +1,27 @@
+// Program to showase the usage of interrupts for carrying out various tasks instead of polling
+
+// Includes
+#include "stm32f4xx.h"
+#include "interrupts.h"
+#include "utils.h"
+
+// Defines
+
+// Function declarations
+
+// Main functions
+int main(void)
+{
+	// Enable the on board USR LED
+	enable_usr_led();
+
+	__disable_irq();
+	// Blink LED using button using interrupt generation
+	blink_led_on_button_press();
+
+	void usart2_rxtx_interrup_init(void)
+
+
+	while(1);
+}
+
