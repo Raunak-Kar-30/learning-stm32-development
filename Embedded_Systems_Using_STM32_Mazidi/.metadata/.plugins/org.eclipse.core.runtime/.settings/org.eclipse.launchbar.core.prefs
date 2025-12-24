@@ -1,9 +1,0 @@
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
-LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=linux
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:01_Blink_LED,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:02_LED_Buttons,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:03_4Digit_7Segment,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:04_USART_Driver,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:06_Systick_Driver,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:07_GP_Timer_driver,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:08_Interrupts,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:09_ADC_DAC
-eclipse.preferences.version=1
-org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:01_Blink_LED/activeLaunchMode=run
-org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:01_Blink_LED/activeLaunchTarget=null\:---
-org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:07_GP_Timer_driver/activeLaunchMode=run
-org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:09_ADC_DAC/activeLaunchMode=run

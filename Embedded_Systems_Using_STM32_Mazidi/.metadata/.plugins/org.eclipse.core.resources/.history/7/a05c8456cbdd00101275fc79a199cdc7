@@ -1,4 +1,0 @@
-// TIMER2 driver program for ADC conversion
-
-// Includes
-#include <timer.h>

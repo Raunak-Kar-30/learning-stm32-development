@@ -1,2 +1,0 @@
-// Driver program for using the ARM system timer - SysTick using interrupts rather than polling the COUNTFLAG in SysTick status register
-

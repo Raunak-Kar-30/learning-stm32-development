@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;04_USART_Driver/Inc/main.h&apos; to &apos;usart.h&apos;" description="Rename resource &apos;main.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Inc/main.h" name="usart.h" stamp="1765383955804" updateReferences="true"/>
-</session>
