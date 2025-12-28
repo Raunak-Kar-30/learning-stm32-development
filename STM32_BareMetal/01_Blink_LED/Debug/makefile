@@ -59,8 +59,8 @@ all: main-build
 main-build: 01_Blink_LED.elf secondary-outputs
 
 # Tool invocations
-01_Blink_LED.elf 01_Blink_LED.map: $(OBJS) $(USER_OBJS) /home/raunak-kar/Learning/Embedded_systems/Embedded_Systems_Using_STM32_Mazidi/01_Blink_LED/STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "01_Blink_LED.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/raunak-kar/Learning/Embedded_systems/Embedded_Systems_Using_STM32_Mazidi/01_Blink_LED/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="01_Blink_LED.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+01_Blink_LED.elf 01_Blink_LED.map: $(OBJS) $(USER_OBJS) /home/raunak_kar/Programming/Embedded/STM32/Learning_and_Practice/STM32_BareMetal/01_Blink_LED/STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "01_Blink_LED.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/raunak_kar/Programming/Embedded/STM32/Learning_and_Practice/STM32_BareMetal/01_Blink_LED/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="01_Blink_LED.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
