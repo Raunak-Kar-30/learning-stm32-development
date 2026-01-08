@@ -47,7 +47,7 @@ void i2c1_init(void)
 }
 
 // Read functionality for I2C1
-i2c1_read_byte(char slave_addr, char mem_addr, char *data)
+void i2c1_read_byte(char slave_addr, char mem_addr, char *data)
 {
 	// Temp variable to read registers to clear some bits.
 	// Needs to be declared as volatile so that the compiler does not remove it for optimization.
@@ -109,11 +109,134 @@ i2c1_read_byte(char slave_addr, char mem_addr, char *data)
 	*data++ = I2C1->DR;
 }
 
-void I2C1_burst_read(char slave_addr, char mem_addr, int n, char *data)
+// Read n bytes of data from the slave device.
+void i2c1_read_bytes(char slave_addr, char mem_addr, int n, char *data)
 {
 	// Temp variable for reading certain registers.
 	volatile int temp;
 
 	// Wait until bus is not busy
 	while(I2C1->SR2 & I2C1_BUS_BUSY);
+
+	// Generate a start condition
+	I2C1->CR1 |= I2C1_START;
+
+	// Wait until a start flag is set
+	while(!(I2C1->SR & I2C1_START_STAT));
+
+	// Transmit slave address + write mode
+	I2C1->DR = slave_addr << 1;
+
+	// Wait until addess flag is set
+	while(!(I2C1->SR & I2C1_ADDR_STAT));
+
+	// Clear the address flag, by reading the Satus Register 2
+	temp = I2C1->SR2;
+
+	// Wait until transmitter is empty before sending the memory address
+	while(!(I2C1->SR1 & I2C1_TXE_STAT));
+
+	// Send the memory address
+	I2C1->DR = mem_addr;
+
+	// Wait until transmitter is empty
+	while(!(I2C1->SR1 & I2C1_TXE_STAT));
+
+	// Generate restart
+	I2C1->CR1 |= I2C1_START;
+
+	// Wait until start flag is set
+	while(!(I2C1->SR1 & I2C1_START_STAT));
+
+	// Transmit slave address + read mode set
+	I2C1->DR = (slave_addr << 1) | 1;
+
+	// Wait until address flag is set
+	while(!(I2C1->SR & I2C1_ADDR_STAT));
+
+	// Clear the address flag by reading the status register 2
+	temp = I2C1->SR2;
+
+	// Enable acknowledge bits (required for multi byte read, to acknowledge after each byte read)
+	I2C1->CR1 |= I2C1_ACK_EN;
+
+	// Start reading
+	while(n > 0UL)
+	{
+		// If only one byte remaining to be read.
+		if(n == 1UL)
+		{
+			// Disable acknowledge
+			I2C1->CR1 &= ~(I2C1_ACK_EN);
+
+			// Generate a stop condition
+			I2C1->CR1 |= I2C1_STOP;
+
+			// Wait until RXNE flag is set
+			while(!(I2C1->SR & I2C1_RXNE_STAT));
+
+			// Read the byte from the Data register
+			*data++ = I2C1->DR;
+		}
+
+		else
+		{
+			// Wait until RXNE flag is set
+			while(!(I2C1->SR & I2C1_RXNE_STAT));
+
+			// Keep reading bytes from the Data register
+			*data++ = I2C1->DR;
+
+			// Decrement n (number of bytes to be read), after each byte read
+			n--;
+		}
+	}
+}
+
+// Burst write function for writing n bytes of data to the slave
+void i2c1_write_bytes(char slave_addr, char mem_addr, int n, char *data)
+{
+	// Volatile temp variable for reading registers to clear certain bits
+	volatile int temp;
+
+	// Wait until line (bus) not busy
+	while(!(I2C1->SR2 & I2C1_BUS_BUSY));
+
+	// Generate a start condition
+	I2C1->CR1 |= I2C1_START;
+
+	// Wait for the start bit to set
+	while(!(I2C1->SR1 & I2C1_START_STAT));
+
+	// Transmit the slave address + write mode set
+	I2C1->DR = slave_addr << 1;
+
+	// Wait until the address flag is set
+	while(!(I2C1->SR1 & I2C1_ADDR_STAT));
+
+	// Clear the address flag
+	temp = I2C1->SR2;
+
+	// Wait until the data register is empty (TXE bit set)
+	while(!(I2C1->SR1 & I2C1_TXE_STAT));
+
+	// Send the memory register address
+	I2C1->DR = mem_addr;
+
+	// Start writing to the slave
+	for(int i = 0; i < n; i++)
+	{
+		// Wait until the data register is empty
+		while(!(I2C1->SR1 & I2C1_TXE_STAT));
+
+		// Transmit memory address
+		I2C1->DR = *data++;
+
+	}
+
+	// Wait until transferring of bytes has finished
+	while(!(I2C1->SR1 & I2C1_BTF_STAT));
+
+	// Generate a stop condition
+	I2C1->CR1 |= I2C1_STOP;
 }

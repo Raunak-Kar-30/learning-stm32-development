@@ -19,7 +19,12 @@
 #define I2C1_ADDR_STAT	(1UL << 1)
 #define I2C1_TXE_STAT	(1UL << 7)
 #define I2C1_RXNE_STAT	(1UL << 6)
+#define I2C1_BTF_STAT	(1UL << 2)
 
 // Function declaration (public)
+void i2c1_init(void);
+void i2c1_read_byte(char slave_addr, char mem_addr, char *data);
+void i2c1_read_bytes(char slave_addr, char mem_addr, int n, char *data);
+void i2c1_write_bytes(char slave_addr, char mem_addr, int n, char *data);
 
 #endif /* INC_I_SQUARE_C_H_ */
