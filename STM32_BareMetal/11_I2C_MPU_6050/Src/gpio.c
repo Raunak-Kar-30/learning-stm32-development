@@ -31,3 +31,14 @@ void gpio_i2c1_init(void)
 	GPIOB->AFR[1] |= (1UL << 2 | 1UL << 6);
 	GPIOB->AFR[1] &= ~(1UL << 0 | 1UL << 1 | 1UL << 3 | 1UL << 4 | 1UL << 5 | 1UL << 7);
 }
+
+// Initiate the pins for data transmission
+void gpio_lcd_1602_init(void)
+{
+	// Enable clock access to GPIOB
+	RCC->AHB1ENR |= GPIOB_CLK_EN;
+
+	// Set the modes of the pin to output mode
+	GPIOB->MODER |= (1UL << 2 | 1UL << 4 | 1UL << 6 | 1UL << 8 | 1UL << 10 | 1UL << 12 | 1UL << 14);
+	GPIOB->MODER &= ~(1UL << 3 | 1UL << 5 | 1UL << 7 | 1UL << 9 | 1UL << 11 | 1UL << 13 | 1UL << 15);
+}

@@ -39,7 +39,6 @@ int main(void)
 	RCC->CFGR &= ~(1UL << 1);
 	RCC->CFGR &= ~(1UL << 4 | 1UL << 5 | 1UL << 6 | 1UL << 7);
 
-
 	if((RCC->CFGR & (1UL << 2)) && ((RCC->CFGR & (1UL << 3)) == 0))
 	{
 		// Provide clock access to GPIOA
@@ -83,9 +82,9 @@ int main(void)
 
 			// Method 3 of turning the LED on and off using the custom systick delay function
 			GPIOA->ODR |= (1UL << 5);
-			systick_delay_ms(0.5);
+			systick_delay_ms(1000);
 			GPIOA->ODR &= ~ (1UL << 5);
-			systick_delay_ms(1);
+			systick_delay_ms(1000);
 		}
 	}
 
@@ -107,6 +106,5 @@ void systick_delay_ms(int ms)
 	for(int i = 0; i < ms; i++)
 	{
 		while(!(SysTick->CTRL & (1UL << 16)));
-		SysTick->CTRL &= ~(1UL << 16);
 	}
 }

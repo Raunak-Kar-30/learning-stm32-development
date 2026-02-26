@@ -5,6 +5,9 @@
 
 // Includes
 #include "main.h"
+#include "i_square_c.h"
+#include "mpu_6050.h"
+#include "lcd_1602.h"
 
 // Main
 int main(void)

@@ -1,0 +1,118 @@
+================================================================================
+STH32 CMSIS PRACTICE GUIDE: 25 FUNCTIONAL CHALLENGES
+================================================================================
+
+--- PHASE 1: INTERACTION & UI LOGIC ---
+
+01. DOUBLE-TAP DETECTOR
+Goal: Light an LED only if a physical button is pressed twice within a 300ms 
+window. Uses GPIO interrupts (EXTI) and a basic timer for windowing.
+
+02. MORSE CODE FLASHER
+Goal: Create a function that takes a string (e.g., "SOS") and flashes an LED 
+in Morse code using precise timer-based intervals for dots and dashes.
+
+03. SOFTWARE DEBOUNCER
+Goal: Implement a state machine that reads a noisy button via polling. Only 
+register a "press" if the IDR bit remains stable for 50ms.
+
+04. PWM BREATHING LED
+Goal: Use a timer in PWM mode to modulate LED brightness. Use a Sine-wave 
+lookup table to make the "breathing" look natural rather than linear.
+
+05. PASSWORD ENTRY SYSTEM
+Goal: Use three buttons as inputs "1", "2", and "3". If the user enters a 
+specific 4-digit sequence, trigger a Green LED; otherwise, flash Red.
+
+
+--- PHASE 2: MEASUREMENT & DATA LOGIC ---
+
+06. DIGITAL TACHOMETER
+Goal: Connect a signal (or button) and calculate the "RPM" of the presses. 
+Print the calculated value to UART once every second.
+
+07. VOLTAGE THRESHOLD ALARM
+Goal: Use the ADC to monitor a potentiometer. If the voltage exceeds 2.5V, 
+trigger an interrupt that toggles a buzzer or alarm LED.
+
+08. ULTRASONIC RANGE FINDER (HC-SR04)
+Goal: Generate a 10us trigger pulse. Use Timer Input Capture to measure the 
+duration of the "Echo" pulse and convert it to centimeters.
+
+09. TEMPERATURE LOGGER
+Goal: Read the STM32 internal temperature sensor every 5 seconds and store 
+the last 10 readings in a circular buffer for retrieval.
+
+10. PEAK DETECTOR
+Goal: Monitor an analog signal via ADC. Keep track of and display the 
+maximum voltage detected since the last system reset.
+
+
+--- PHASE 3: COMMUNICATION & PROTOCOLS ---
+
+11. UART COMMAND PARSER
+Goal: Listen for specific UART strings like "LED_ON" or "LED_OFF" and 
+toggle hardware based on the string received.
+
+12. I2C BUS SCANNER
+Goal: Write a loop that probes every possible 7-bit I2C address and prints 
+the hex address of any device that returns an "ACK" bit.
+
+13. SPI HANDSHAKE
+Goal: Configure SPI in full-duplex. Send a byte to a peripheral and 
+validate that the returned byte matches a specific hardcoded key.
+
+14. UART CASE CONVERTER
+Goal: Receive a character via UART; if it is lowercase, convert it to 
+uppercase in the registers and send it back immediately.
+
+15. NMEA GPS PARSER
+Goal: Stream raw GPS data into the UART. Write logic to extract only the 
+Latitude and Longitude values from the GPGGA string.
+
+
+--- PHASE 4: SYSTEM & ROBUSTNESS ---
+
+16. DEAD MAN'S SWITCH (WATCHDOG)
+Goal: Set the IWDG for 2 seconds. The user must press a button to "refresh" 
+the timer. If they fail, the system must reset.
+
+17. POWER-OFF DATA SAVE
+Goal: Use the Programmable Voltage Detector (PVD). When VDD drops below a 
+threshold, quickly write a status bit to a Backup Register before power loss.
+
+18. FLASH-BASED ODOMETER
+Goal: Every time the device boots, increment a counter stored in a 
+specific Flash sector. Print "Boot Count: X" to the console.
+
+19. 8-BIT BINARY COUNTER
+Goal: Use 8 LEDs on a single GPIO Port. Use a button to increment a variable 
+and display its binary value across the LEDs using bitmasking.
+
+20. UART FREQUENCY GENERATOR
+Goal: Allow the user to type a frequency (e.g., "1000") into a terminal, 
+and configure a timer to output a square wave of that exact frequency.
+
+
+--- PHASE 5: ADVANCED COORDINATION ---
+
+21. DMA AUDIO PLAYER
+Goal: Fill a RAM array with a Sine wave. Use a Timer to trigger the DMA 
+to move data to the DAC, creating a smooth audio tone with 0% CPU usage.
+
+22. HARDWARE LOGIC PROBE
+Goal: Monitor a GPIO pin. On every state change, capture the Timer Count 
+(CNT) to see exactly how many microseconds passed between transitions.
+
+23. ON-THE-FLY CLOCK SWITCHER
+Goal: Start on the internal HSI clock. Use a button to switch the system 
+clock to the HSE (Crystal) without crashing the UART baud rate.
+
+24. MULTI-CHANNEL VOLTMETER
+Goal: Use ADC Scan Mode + DMA to read 4 different analog pins. Store results 
+in a RAM array and print them as a formatted table via UART.
+
+25. LOW-POWER STOPWATCH
+Goal: Keep the MCU in 'Stop Mode'. Wake it up with a button interrupt, 
+time the duration until the next press, and return to sleep.
+================================================================================

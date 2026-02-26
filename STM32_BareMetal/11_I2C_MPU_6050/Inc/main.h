@@ -3,6 +3,8 @@
 
 // Includes
 #include "stm32f4xx.h"
+#include "utils.h"
+#include "gpio.h"
 
 // Defines
 #define SYS_FREQ	16000000

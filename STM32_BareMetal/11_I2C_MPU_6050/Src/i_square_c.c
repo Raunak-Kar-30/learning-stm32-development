@@ -46,7 +46,9 @@ void i2c1_init(void)
 	I2C1->CR1 |= I2C1_PERIPH_EN;
 }
 
-// Read functionality for I2C1
+// Read functionality for I2C1.
+// The slave address refers to the slave device we want to communicate with.
+// The memory address refers to the register from which we want to read.
 void i2c1_read_byte(char slave_addr, char mem_addr, char *data)
 {
 	// Temp variable to read registers to clear some bits.
@@ -93,7 +95,7 @@ void i2c1_read_byte(char slave_addr, char mem_addr, char *data)
 	// Wait until the address flag is set.
 	while(!(I2C1->SR1 & I2C1_ADDR_STAT));
 
-	// Disable acknowledge
+	// Disable acknowledge (no acknowledge is needed for reading just 1 byte)
 	I2C1->CR1 &= ~(I2C1_ACK_EN);
 
 	// Clear address flag
@@ -110,6 +112,8 @@ void i2c1_read_byte(char slave_addr, char mem_addr, char *data)
 }
 
 // Read n bytes of data from the slave device.
+// The slave address refers to the slave device we want to communicate with.
+// The memory address refers to the register from which we want to read.
 void i2c1_read_bytes(char slave_addr, char mem_addr, int n, char *data)
 {
 	// Temp variable for reading certain registers.
@@ -194,6 +198,8 @@ void i2c1_read_bytes(char slave_addr, char mem_addr, int n, char *data)
 }
 
 // Burst write function for writing n bytes of data to the slave
+// The slave address refers to the slave device we want to communicate with.
+// The memory address refers to the register to which we want to write the data to.
 void i2c1_write_bytes(char slave_addr, char mem_addr, int n, char *data)
 {
 	// Volatile temp variable for reading registers to clear certain bits

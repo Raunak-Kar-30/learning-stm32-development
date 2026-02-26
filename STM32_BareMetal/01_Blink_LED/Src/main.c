@@ -4,7 +4,11 @@
 #include <stm32f4xx.h>
 
 // Defines
+#define SYS_FREQ		16000000
 #define GPIOA_CLK_EN	(1UL << 0)
+#define SYSTICK_EN		(1UL << 0)
+#define SYSTICK_CNT		(1UL << 16)
+#define SYSTICK_CLK_INT	(1UL << 2)
 
 // Function declarations
 void delay_ms(int ms);
@@ -23,13 +27,18 @@ int main(void)
 	// Super loop
 	while(1)
 	{
+		/*
 		// Toggle LED using the ODR (output data register)
 		GPIOA->ODR |= (1UL << 5);
 		delay_ms(1000);
 		GPIOA->ODR &= ~(1UL << 5);
-		delay_ms(1000);
+		delay_ms(1000);*/
 
 		// Toggle LED using the BSRR (bit set/reset register)
+		GPIOA->BSRR |= (1UL << 5);
+		delay_ms(1000);
+		GPIOA->BSRR |= (1UL << (5+16));
+		delay_ms(1000);
 	}
 
 	return 0;
@@ -38,8 +47,21 @@ int main(void)
 // Delay in micro-seconds
 void delay_ms(int ms)
 {
-	for(int i = ms; i > 0; i--)
+	// Disable the Sytick timer
+	SysTick->CTRL &= ~(SYSTICK_EN);
+
+	// Load the max value in Systick Load register and clear the current value register.
+	SysTick->LOAD = (SYS_FREQ / 1000) - 1;
+	SysTick->VAL = 0;
+
+	// Select the correct clock source and enable the timer
+	SysTick->CTRL |= SYSTICK_CLK_INT;
+	SysTick->CTRL |= SYSTICK_EN;
+
+	// Delay
+	for(int i = 0; i < ms; i++)
 	{
-		for(int j = 0; j < 1300; j++);
+		while(!(SysTick->CTRL & SYSTICK_CNT));
+		SysTick->CTRL &= ~(SYSTICK_CNT);
 	}
 }
